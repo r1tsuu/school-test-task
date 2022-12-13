@@ -1,13 +1,23 @@
-const Subject = require("../models/Subject");
-const Teacher = require("../models/Teacher");
+const { Lesson, Subject, Teacher } = require("../models");
+
 const TeacherService = require("../services/Teacher");
 
 const TeacherController = require("express").Router();
 
 TeacherController.get("/", async (req, res) => {
   try {
+    const { subjectId, lessonsType } = req.query;
+
     const teachers = await Teacher.findAll({
-      include: Subject,
+      where: {
+        ...(lessonsType && {
+          lessonsType,
+        }),
+        ...(subjectId && {
+          subjectId,
+        }),
+      },
+      include: [Subject, Lesson],
     });
     res.json(teachers);
   } catch (err) {
@@ -33,25 +43,26 @@ TeacherController.get("/:id", async (req, res) => {
 
 TeacherController.post("/", async (req, res) => {
   const teacher = req.body;
-
-  try {
-    await TeacherService.createSchema.validateAsync(teacher);
-  } catch (error) {
+  const result = TeacherService.createSchema.validate(teacher);
+  if (result.error) {
     res.json("validation");
-  }
-
-  try {
-    const dbTeacher = await Teacher.create(teacher);
-    res.json(dbTeacher);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send();
+  } else {
+    try {
+      const createdTeacher = await Teacher.create(teacher);
+      res.json(createdTeacher);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send();
+    }
   }
 });
 
 TeacherController.put("/:id", async (req, res) => {
-  try {
-    await TeacherService.updateSchema.validateAsync(req.body);
+  const { error } = TeacherService.updateSchema.validate(req.body);
+
+  if (error) {
+    res.json("validation");
+  } else {
     try {
       await Teacher.update(req.body, {
         where: {
@@ -69,8 +80,6 @@ TeacherController.put("/:id", async (req, res) => {
       console.log(err);
       res.status(500).send();
     }
-  } catch (err) {
-    res.json("validation");
   }
 });
 

@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./database");
-const Subject = require("./Subject");
 
 const Teacher = sequelize.define("teacher", {
   firstName: {
@@ -26,7 +25,5 @@ const Teacher = sequelize.define("teacher", {
     type: DataTypes.INTEGER,
   },
 });
-
-Teacher.belongsTo(Subject); // subjectId in TEACHERS
 
 module.exports = Teacher;

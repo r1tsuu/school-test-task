@@ -1,7 +1,6 @@
 require("dotenv").config();
 
-const sequelize = require("./src/models/database");
-const Subject = require("./src/models/Subject");
+const { Subject, sequelize } = require("./src/models");
 
 const subjects = [
   "Математика",

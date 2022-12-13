@@ -1,11 +1,11 @@
 const Joi = require("joi");
 
-const createSchema = Joi.object({
-  firstName: Joi.string(),
-  secondName: Joi.string(),
-  surname: Joi.string(),
-  lessonsType: Joi.string().valid("individual", "group"),
-  subjectId: Joi.number(),
+const createSchema = Joi.object().keys({
+  firstName: Joi.string().required(),
+  secondName: Joi.string().required(),
+  surname: Joi.string().required(),
+  lessonsType: Joi.string().valid("individual", "group").required(),
+  subjectId: Joi.number().required(),
   individualSalaryRate: Joi.number().optional(),
   groupSalaryRate: Joi.array().items(Joi.number()).optional(),
 });
