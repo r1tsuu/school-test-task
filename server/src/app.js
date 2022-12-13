@@ -1,11 +1,15 @@
 const express = require("express");
-const { sequelize } = require("./models");
+const TeacherController = require("./controllers/teacher");
+const sequelize = require("./models/database");
+require("./models/Lesson");
 
 const app = express();
 
 const port = process.env.PORT;
 
 app.use(express.json());
+
+app.use("/api/teacher", TeacherController);
 
 sequelize.sync().then((req) => {
   app.listen(port, async () => {

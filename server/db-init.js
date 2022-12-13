@@ -1,6 +1,7 @@
 require("dotenv").config();
 
-const { Subject } = require("./src/models");
+const sequelize = require("./src/models/database");
+const Subject = require("./src/models/Subject");
 
 const subjects = [
   "Математика",
@@ -24,6 +25,6 @@ async function initSubjects() {
   }
 }
 
-Subject.sync().then(() => {
+sequelize.sync().then(() => {
   initSubjects();
 });
