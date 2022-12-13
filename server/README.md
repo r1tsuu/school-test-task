@@ -26,6 +26,10 @@ Update teacher
 
 Delete teacher by id
 
+# GET /api/lesson
+
+Get all lessons
+
 # POST /api/lesson
 
 Create lesson, example body: { "startDate": "2022-12-13T19:17:20.671Z",

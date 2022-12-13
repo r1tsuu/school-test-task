@@ -1,10 +1,23 @@
-const { Lesson } = require("../models");
+const { Lesson, Teacher, Subject } = require("../models");
 
 const LessonService = require("../services/Lesson");
 
 const LessonController = require("express").Router();
 
-LessonController.get("/", async (req, res) => {});
+LessonController.get("/", async (req, res) => {
+  try {
+    const lessons = await Lesson.findAll({
+      include: {
+        model: Teacher,
+        include: Subject,
+      },
+    });
+    res.json(lessons);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send();
+  }
+});
 
 LessonController.post("/", async (req, res) => {
   const lesson = req.body;
