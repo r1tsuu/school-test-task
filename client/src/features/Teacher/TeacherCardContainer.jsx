@@ -28,16 +28,16 @@ export const TeacherCardContainer = ({
       deleteTeacher(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["teachers"]);
       setIsDeleteTeacherDialogOpened(false);
+      queryClient.invalidateQueries(["teachers"]);
     },
   });
 
   const updateMutation = useMutation({
     mutationFn: (teacher) => updateTeacher(id, teacher),
     onSuccess: () => {
-      queryClient.invalidateQueries(["teachers"]);
       setIsUpdateTeacherDialogOpened(false);
+      queryClient.invalidateQueries(["teachers"]);
     },
   });
 
@@ -81,6 +81,8 @@ export const TeacherCardContainer = ({
         surname={surname}
         subjectName={subject.name}
         lessonsType={lessonsType}
+        individualSalaryRate={individualSalaryRate}
+        groupSalaryRate={groupSalaryRate}
         onOpenDeleteDialog={handleDeleteTeacherDialogOpen}
         onOpenUpdateDialog={handleUpdateTeacherDialogOpen}
       />

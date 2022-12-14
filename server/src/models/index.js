@@ -7,6 +7,7 @@ const Subject = require("./Subject");
 Teacher.belongsTo(Subject);
 Teacher.hasMany(Lesson);
 Lesson.belongsTo(Teacher);
+Lesson.belongsTo(Subject);
 
 module.exports = {
   sequelize,

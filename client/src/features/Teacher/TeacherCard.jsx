@@ -25,6 +25,8 @@ export const TeacherCard = ({
   secondName,
   surname,
   lessonsType,
+  individualSalaryRate,
+  groupSalaryRate,
   subjectName,
   onOpenUpdateDialog,
   onOpenDeleteDialog,
@@ -50,7 +52,21 @@ export const TeacherCard = ({
       title: "Тип уроків",
       value: lessonsType === "individual" ? "Індивідуальні" : "Групові",
     },
+    {
+      title: "Зарплатна ставка",
+      value:
+        lessonsType === "individual" ? (
+          `${individualSalaryRate} грн`
+        ) : (
+          <>
+            {[1, 2, 3, 4, 5, 6].map(
+              (count) => `${count}: ${groupSalaryRate[count - 1]} грн`
+            )}
+          </>
+        ),
+    },
   ];
+
   return (
     <Card
       sx={{

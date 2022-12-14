@@ -9,6 +9,14 @@ const Lesson = sequelize.define("lesson", {
   studentsCount: {
     type: DataTypes.INTEGER,
   },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  teacherSalary: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = Lesson;
