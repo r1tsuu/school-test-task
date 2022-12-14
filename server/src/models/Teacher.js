@@ -26,4 +26,12 @@ const Teacher = sequelize.define("teacher", {
   },
 });
 
+Teacher.addScope(
+  "defaultScope",
+  {
+    order: [["id", "ASC"]],
+  },
+  { override: true }
+);
+
 module.exports = Teacher;

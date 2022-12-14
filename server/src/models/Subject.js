@@ -8,4 +8,12 @@ const Subject = sequelize.define("subject", {
   },
 });
 
+Subject.addScope(
+  "defaultScope",
+  {
+    order: [["id", "ASC"]],
+  },
+  { override: true }
+);
+
 module.exports = Subject;

@@ -19,4 +19,12 @@ const Lesson = sequelize.define("lesson", {
   },
 });
 
+Lesson.addScope(
+  "defaultScope",
+  {
+    order: [["id", "ASC"]],
+  },
+  { override: true }
+);
+
 module.exports = Lesson;
