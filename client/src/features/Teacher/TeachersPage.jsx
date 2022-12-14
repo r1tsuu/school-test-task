@@ -37,7 +37,7 @@ export const TeachersPage = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={10}>
-      {subjectsQuery.isFetched && isCreateTeacherDialogOpened && (
+      {subjectsQuery.isFetched && (
         <TeacherCreateDialog
           onSubmit={createTeacherMutation.mutate}
           subjects={subjectsQuery.data.data}

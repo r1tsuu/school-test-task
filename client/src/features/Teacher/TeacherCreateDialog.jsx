@@ -29,6 +29,7 @@ const GroupSalaryForm = ({ value, onChange }) => {
     <Stack spacing={1}>
       {[1, 2, 3, 4, 5, 6].map((count, index) => (
         <TextField
+          fullWidth
           type="number"
           value={value[index]}
           onChange={handleChange(index)}
@@ -42,13 +43,7 @@ const GroupSalaryForm = ({ value, onChange }) => {
   );
 };
 
-export const TeacherCreateDialog = ({
-  isOpen,
-  onSubmit,
-  onClose,
-  isLoading,
-  subjects,
-}) => {
+const Content = ({ isLoading, onSubmit, subjects, onClose }) => {
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [surname, setSurname] = useState("");
@@ -97,14 +92,14 @@ export const TeacherCreateDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <>
       <DialogTitle>Створити викладача</DialogTitle>
       <DialogContent
         sx={{
           display: "flex",
           flexDirection: "column",
-          minWidth: "500px",
-          gap: 1.5,
+          width: "500px",
+          gap: 2,
         }}
       >
         <TextField
@@ -166,6 +161,7 @@ export const TeacherCreateDialog = ({
               />
             ) : (
               <TextField
+                fullWidth
                 type="number"
                 value={individualSalaryRate}
                 onChange={handleIndividualSalaryRateChange}
@@ -179,9 +175,12 @@ export const TeacherCreateDialog = ({
           </Box>
         </FormControl>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Відмінити</Button>
+      <DialogActions sx={{ justifyContent: "center", gap: 2, py: 3 }}>
+        <Button variant="outlined" onClick={onClose}>
+          Відмінити
+        </Button>
         <LoadingButton
+          variant="contained"
           loadingPosition="end"
           loading={isLoading}
           onClick={handleSubmit}
@@ -189,6 +188,25 @@ export const TeacherCreateDialog = ({
           Створити
         </LoadingButton>
       </DialogActions>
+    </>
+  );
+};
+
+export const TeacherCreateDialog = ({
+  isOpen,
+  onSubmit,
+  onClose,
+  isLoading,
+  subjects,
+}) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose}>
+      <Content
+        onSubmit={onSubmit}
+        onClose={onClose}
+        isLoading={isLoading}
+        subjects={subjects}
+      />
     </Dialog>
   );
 };

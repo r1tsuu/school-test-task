@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQueryClient, useMutation } from "react-query";
 import { deleteTeacher, updateTeacher } from "../../api";
+import { TeacherDeleteDialog } from "./TaecherDeleteDialog";
 import { TeacherCard } from "./TeacherCard";
 
 export const TeacherCardContainer = ({
@@ -11,9 +12,18 @@ export const TeacherCardContainer = ({
   lessonsType,
   subject,
 }) => {
+  const [isDeleteTeacherDialogOpened, setIsDeleteTeacherDialogOpened] =
+    useState(false);
+  const [isUpdateTeacherDialogOpened, setIsUpdateTeacherDialogOpened] =
+    useState(false);
+
   const queryClient = useQueryClient();
+
   const deleteMutation = useMutation({
-    mutationFn: () => deleteTeacher(id),
+    mutationFn: async () => {
+      await deleteTeacher(id);
+      setIsDeleteTeacherDialogOpened(false);
+    },
     onSuccess: () => queryClient.invalidateQueries(["teachers"]),
   });
 
@@ -21,11 +31,6 @@ export const TeacherCardContainer = ({
     mutationFn: (teacher) => updateTeacher(id, teacher),
     onSuccess: () => queryClient.invalidateQueries(["teachers"]),
   });
-
-  const [isDeleteTeacherDialogOpened, setIsDeleteTeacherDialogOpened] =
-    useState(false);
-  const [isUpdateTeacherDialogOpened, setIsUpdateTeacherDialogOpened] =
-    useState(false);
 
   const handleDeleteTeacherDialogOpen = () =>
     setIsDeleteTeacherDialogOpened(true);
@@ -39,6 +44,12 @@ export const TeacherCardContainer = ({
 
   return (
     <>
+      <TeacherDeleteDialog
+        isOpen={isDeleteTeacherDialogOpened}
+        onClose={handleDeleteTeacherDialogClose}
+        onSubmit={deleteMutation.mutate}
+        isLoading={deleteMutation.isLoading}
+      />
       <TeacherCard
         firstName={firstName}
         secondName={secondName}
