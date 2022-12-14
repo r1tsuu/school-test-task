@@ -1,12 +1,10 @@
 import { useState } from "react";
 import {
-  Box,
   IconButton,
   Card,
   CardActions,
   Button,
   CardContent,
-  Typography,
   Dialog,
   DialogTitle,
   DialogActions,
@@ -14,6 +12,7 @@ import {
 } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { TeacherDialogForm } from "./TeacherDialogForm";
+import { CardList } from "../../components/CardList";
 
 const TeacherDeleteDialog = ({ name, isOpen, onClose, onSubmit }) => {
   return (
@@ -24,17 +23,6 @@ const TeacherDeleteDialog = ({ name, isOpen, onClose, onSubmit }) => {
         <Button onClick={onSubmit}>Так</Button>
       </DialogActions>
     </Dialog>
-  );
-};
-
-const CardRow = ({ title, value }) => {
-  return (
-    <Box display="flex" gap={3}>
-      <Typography color="text.secondary" variant="h5">
-        {title}
-      </Typography>
-      <Typography variant="h5">{value}</Typography>
-    </Box>
   );
 };
 
@@ -132,9 +120,7 @@ export const TeacherCard = ({
         }}
       >
         <CardContent>
-          {list.map(({ title, value }) => (
-            <CardRow title={title} value={value} key={title} />
-          ))}
+          <CardList list={list} />
         </CardContent>
         <CardActions
           sx={{

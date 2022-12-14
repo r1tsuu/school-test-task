@@ -5,6 +5,7 @@ const createSchema = Joi.object({
   studentsCount: Joi.number().optional(),
   teacherId: Joi.number().required(),
   teacherSalary: Joi.number().required(),
+  subjectId: Joi.number().required(),
   type: Joi.string().valid("individual", "group").required(),
 });
 

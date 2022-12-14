@@ -8,24 +8,20 @@ import {
   updateTeacher,
   deleteTeacher,
 } from "../../api";
+import { CardSkeleton } from "../../components/CardSkeleton";
 import { TeacherCard } from "./TeacherCard";
-import { TeacherCardSkeleton } from "./TeacherCardSkeleton";
 import { TeacherDialogForm } from "./TeacherDialogForm";
 
 const TeachersList = ({ subjectsQuery, teachersQuery }) => {
   const queryClient = useQueryClient();
   const updateTeacherMutation = useMutation({
     mutationFn: updateTeacher,
-    onSuccess: () => {
-      queryClient.invalidateQueries("teachers");
-    },
+    onSuccess: () => queryClient.invalidateQueries("teachers"),
   });
 
   const deleteTeacherMutation = useMutation({
     mutationFn: deleteTeacher,
-    onSuccess: () => {
-      queryClient.invalidateQueries("teachers");
-    },
+    onSuccess: () => queryClient.invalidateQueries("teachers"),
   });
 
   if (teachersQuery.isLoading || subjectsQuery.isLoading)
@@ -34,8 +30,8 @@ const TeachersList = ({ subjectsQuery, teachersQuery }) => {
         {Array(6)
           .fill("_")
           .map((_, index) => (
-            <Grid item xs={12} lg={4} key={index}>
-              <TeacherCardSkeleton />
+            <Grid item xs={12} lg={6} key={index}>
+              <CardSkeleton />
             </Grid>
           ))}
       </Grid>
@@ -58,7 +54,7 @@ const TeachersList = ({ subjectsQuery, teachersQuery }) => {
           updateTeacherMutation.mutate({ id, teacher });
 
         return (
-          <Grid item xs={12} lg={4} key={id}>
+          <Grid item xs={12} lg={6} key={id}>
             <TeacherCard
               onDelete={handleDelete}
               onUpdate={handleUpdate}
@@ -86,9 +82,7 @@ export const TeachersPage = () => {
 
   const createTeacherMutation = useMutation({
     mutationFn: createTeacher,
-    onSuccess: () => {
-      queryClient.invalidateQueries("teachers");
-    },
+    onSuccess: () => queryClient.invalidateQueries("teachers"),
   });
 
   const [isCreateTeacherDialogOpened, setIsCreateTeacherDialogOpened] =

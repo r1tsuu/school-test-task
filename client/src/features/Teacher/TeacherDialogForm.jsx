@@ -5,12 +5,7 @@ import {
   DialogContent,
   Button,
   TextField,
-  Select,
-  MenuItem,
   FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   FormLabel,
   Stack,
   Box,
@@ -18,6 +13,8 @@ import {
 } from "@mui/material";
 
 import { useState } from "react";
+import { LessonTypeSelect } from "../../components/LessonTypeSelect";
+import { SubjectSelect } from "../../components/SubjectSelect";
 
 const GroupSalaryForm = ({ value, onChange }) => {
   const handleChange = (index) => {
@@ -144,31 +141,15 @@ const TeacherForm = ({
           variant="standard"
           label="По батькові"
         />
-        <FormControl fullWidth>
-          <FormLabel>Предмет</FormLabel>
-          <Select onChange={handleSubjectIdChange} value={subjectId}>
-            {subjects.map(({ id, name }) => (
-              <MenuItem value={id} key={id}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <FormLabel>Тип уроків</FormLabel>
-          <RadioGroup value={lessonsType} onChange={handleLessonsTypeChange}>
-            <FormControlLabel
-              value="individual"
-              control={<Radio />}
-              label="Індивідуальні"
-            />
-            <FormControlLabel
-              value="group"
-              control={<Radio />}
-              label="Групові"
-            />
-          </RadioGroup>
-        </FormControl>
+        <SubjectSelect
+          subjects={subjects}
+          value={subjectId}
+          onChange={handleSubjectIdChange}
+        />
+        <LessonTypeSelect
+          value={lessonsType}
+          onChange={handleLessonsTypeChange}
+        />
         <FormControl fullWidth>
           <FormLabel>Зарплатна ставка</FormLabel>
           <Box mt={2}>

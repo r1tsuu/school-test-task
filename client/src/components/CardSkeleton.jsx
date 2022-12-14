@@ -1,7 +1,6 @@
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
+import { Stack, Skeleton } from "@mui/material";
 
-export const TeacherCardSkeleton = () => {
+export const CardSkeleton = () => {
   return (
     <Stack spacing={0.4}>
       {/* For variant="text", adjust the height via font-size */}

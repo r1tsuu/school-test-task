@@ -24,6 +24,12 @@ const TeachersPage = lazy(() =>
   }))
 );
 
+const LessonsPage = lazy(() =>
+  import("./features/Lesson/LessonsPage").then((mod) => ({
+    default: mod.LessonsPage,
+  }))
+);
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +44,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense>
             <TeachersPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/lessons",
+        element: (
+          <Suspense>
+            <LessonsPage />
           </Suspense>
         ),
       },
