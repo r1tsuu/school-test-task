@@ -1,4 +1,4 @@
-# Api endpoints
+# API Endpoints
 
 ## GET /api/subject
 
