@@ -26,8 +26,8 @@ export const TeacherCard = ({
   surname,
   lessonsType,
   subjectName,
-  onUpdateClick,
-  onDeleteClick,
+  onOpenUpdateDialog,
+  onOpenDeleteDialog,
 }) => {
   const list = [
     {
@@ -67,8 +67,8 @@ export const TeacherCard = ({
           justifyContent: "space-between",
         }}
       >
-        <Button onClick={onUpdateClick}>Редагувати</Button>
-        <IconButton onClick={onDeleteClick}>
+        <Button onClick={onOpenUpdateDialog}>Редагувати</Button>
+        <IconButton onClick={onOpenDeleteDialog}>
           <PersonRemoveIcon />
         </IconButton>
       </CardActions>

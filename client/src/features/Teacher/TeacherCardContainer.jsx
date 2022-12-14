@@ -3,13 +3,17 @@ import { useQueryClient, useMutation } from "react-query";
 import { deleteTeacher, updateTeacher } from "../../api";
 import { TeacherDeleteDialog } from "./TaecherDeleteDialog";
 import { TeacherCard } from "./TeacherCard";
+import { TeacherDialogForm } from "./TeacherDialogForm";
 
 export const TeacherCardContainer = ({
   id,
+  subjects,
   firstName,
   secondName,
   surname,
   lessonsType,
+  groupSalaryRate,
+  individualSalaryRate,
   subject,
 }) => {
   const [isDeleteTeacherDialogOpened, setIsDeleteTeacherDialogOpened] =
@@ -20,16 +24,21 @@ export const TeacherCardContainer = ({
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: async () => {
-      await deleteTeacher(id);
+    mutationFn: () => {
+      deleteTeacher(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["teachers"]);
       setIsDeleteTeacherDialogOpened(false);
     },
-    onSuccess: () => queryClient.invalidateQueries(["teachers"]),
   });
 
   const updateMutation = useMutation({
     mutationFn: (teacher) => updateTeacher(id, teacher),
-    onSuccess: () => queryClient.invalidateQueries(["teachers"]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["teachers"]);
+      setIsUpdateTeacherDialogOpened(false);
+    },
   });
 
   const handleDeleteTeacherDialogOpen = () =>
@@ -44,7 +53,23 @@ export const TeacherCardContainer = ({
 
   return (
     <>
+      <TeacherDialogForm
+        title="Редагувати викладача"
+        isOpen={isUpdateTeacherDialogOpened}
+        onClose={handleUpdateTeacherDialogClose}
+        onSubmit={updateMutation.mutate}
+        isLoading={deleteMutation.isLoading}
+        subjects={subjects}
+        defaultFirstName={firstName}
+        defaultSecondName={secondName}
+        defaultSurname={surname}
+        defaultGroupSalaryRate={groupSalaryRate}
+        defaultLessonsType={lessonsType}
+        defaultSubjectId={subject.id}
+        defaultIndividualSalaryRate={individualSalaryRate}
+      />
       <TeacherDeleteDialog
+        name={firstName}
         isOpen={isDeleteTeacherDialogOpened}
         onClose={handleDeleteTeacherDialogClose}
         onSubmit={deleteMutation.mutate}
@@ -56,7 +81,8 @@ export const TeacherCardContainer = ({
         surname={surname}
         subjectName={subject.name}
         lessonsType={lessonsType}
-        onDeleteClick={handleDeleteTeacherDialogOpen}
+        onOpenDeleteDialog={handleDeleteTeacherDialogOpen}
+        onOpenUpdateDialog={handleUpdateTeacherDialogOpen}
       />
     </>
   );

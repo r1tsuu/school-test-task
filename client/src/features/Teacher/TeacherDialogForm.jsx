@@ -43,16 +43,33 @@ const GroupSalaryForm = ({ value, onChange }) => {
   );
 };
 
-const Content = ({ isLoading, onSubmit, subjects, onClose }) => {
-  const [firstName, setFirstName] = useState("");
-  const [secondName, setSecondName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [subjectId, setSubjectId] = useState(subjects[0]?.id);
-  const [individualSalaryRate, setIndividualSalaryRate] = useState(120);
-  const [groupSalaryRate, setGroupSalaryRate] = useState([
-    140, 160, 180, 200, 220, 250,
-  ]);
-  const [lessonsType, setLessonsType] = useState("individual");
+const TeacherForm = ({
+  onClose,
+  isLoading,
+  onSubmit,
+  subjects,
+  defaultFirstName,
+  defaultSecondName,
+  defaultSurname,
+  defaultSubjectId,
+  defaultIndividualSalaryRate,
+  defaultGroupSalaryRate,
+  defaultLessonsType,
+  title,
+}) => {
+  const [firstName, setFirstName] = useState(defaultFirstName);
+  const [secondName, setSecondName] = useState(defaultSecondName);
+  const [surname, setSurname] = useState(defaultSurname);
+  const [subjectId, setSubjectId] = useState(
+    defaultSubjectId ?? subjects[0].id
+  );
+  const [individualSalaryRate, setIndividualSalaryRate] = useState(
+    defaultIndividualSalaryRate
+  );
+  const [groupSalaryRate, setGroupSalaryRate] = useState(
+    defaultGroupSalaryRate
+  );
+  const [lessonsType, setLessonsType] = useState(defaultLessonsType);
 
   const [isValidationError, setIsValidationError] = useState(false);
 
@@ -93,7 +110,7 @@ const Content = ({ isLoading, onSubmit, subjects, onClose }) => {
 
   return (
     <>
-      <DialogTitle>Створити викладача</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent
         sx={{
           display: "flex",
@@ -185,23 +202,41 @@ const Content = ({ isLoading, onSubmit, subjects, onClose }) => {
           loading={isLoading}
           onClick={handleSubmit}
         >
-          Створити
+          Підтвердити
         </LoadingButton>
       </DialogActions>
     </>
   );
 };
 
-export const TeacherCreateDialog = ({
+export const TeacherDialogForm = ({
   isOpen,
   onSubmit,
   onClose,
   isLoading,
   subjects,
+  title,
+  defaultFirstName = "",
+  defaultSecondName = "",
+  defaultSurname = "",
+  defaultSubjectId,
+  defaultIndividualSalaryRate = 120,
+  defaultGroupSalaryRate = [140, 160, 180, 200, 220, 250],
+  defaultLessonsType = "individual",
 }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <Content
+      <TeacherForm
+        defaultFirstName={defaultFirstName}
+        defaultSecondName={defaultSecondName}
+        defaultSurname={defaultSurname}
+        defaultSubjectId={defaultSubjectId}
+        defaultIndividualSalaryRate={defaultIndividualSalaryRate ?? 120}
+        defaultGroupSalaryRate={
+          defaultGroupSalaryRate ?? [140, 160, 180, 200, 220, 250]
+        }
+        defaultLessonsType={defaultLessonsType}
+        title={title}
         onSubmit={onSubmit}
         onClose={onClose}
         isLoading={isLoading}
