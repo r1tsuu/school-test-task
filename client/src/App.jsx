@@ -1,15 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+    mutations: {},
+  },
+});
 
-const Dashboard = lazy(() =>
-  import("./components//Dashboard").then((mod) => ({
-    default: mod.Dashboard,
-  }))
-);
+const Dashboard = lazy(() => import("./components/Dashboard"));
 
 const TeachersPage = lazy(() =>
   import("./features/Teacher/TeachersPage").then((mod) => ({
@@ -20,11 +24,19 @@ const TeachersPage = lazy(() =>
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard />,
+    element: (
+      <Suspense>
+        <Dashboard />
+      </Suspense>
+    ),
     children: [
       {
         path: "/teachers",
-        element: <TeachersPage />,
+        element: (
+          <Suspense>
+            <TeachersPage />
+          </Suspense>
+        ),
       },
     ],
   },
@@ -33,6 +45,7 @@ const router = createBrowserRouter([
 export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <CssBaseline />
       <RouterProvider router={router} />
     </QueryClientProvider>

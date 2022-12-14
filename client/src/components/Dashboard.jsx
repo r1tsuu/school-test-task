@@ -44,7 +44,7 @@ export const Dashboard = () => {
       >
         <List>
           {menu.map(({ label, icon, link }) => (
-            <ListItem to={link} component={RouterLink}>
+            <ListItem key={label} to={link} component={RouterLink}>
               <ListItemButton>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={label} />
@@ -60,3 +60,5 @@ export const Dashboard = () => {
     </Box>
   );
 };
+
+export default Dashboard;

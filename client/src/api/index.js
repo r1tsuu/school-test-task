@@ -4,30 +4,38 @@ const client = axios.create({
   baseURL: "http://localhost:3000/api",
 });
 
-export const fetchSubjects = () => {
-  return client.get("/subject");
+export const fetchSubjects = async () => {
+  const { data } = await client.get("/subject");
+  return data;
 };
 
-export const fetchTeachers = () => {
-  return client.get("/teacher");
+export const fetchTeachers = async () => {
+  const { data } = await client.get("/teacher");
+  return data;
 };
 
-export const createTeacher = (teacher) => {
-  return client.post("/teacher", teacher);
+export const createTeacher = async (teacher) => {
+  const { data } = await client.post("/teacher", teacher);
+  return data;
 };
 
-export const updateTeacher = (id, teacher) => {
-  return client.put(`/teacher/${id}`, teacher);
+export const updateTeacher = async ({ id, teacher }) => {
+  console.log(teacher);
+  const { data } = await client.put(`/teacher/${id}`, teacher);
+  return data;
 };
 
-export const deleteTeacher = (id) => {
-  return client.delete(`/teacher/${id}`);
+export const deleteTeacher = async (id) => {
+  const { data } = await client.delete(`/teacher/${id}`);
+  return data;
 };
 
-export const fetchLessons = () => {
-  return client.get("/lesson");
+export const fetchLessons = async () => {
+  const { data } = await client.get("/lesson");
+  return data;
 };
 
-export const createLesson = (lesson) => {
-  return client.post("/lesson", lesson);
+export const createLesson = async (lesson) => {
+  const { data } = await client.post("/lesson", lesson);
+  return data;
 };

@@ -16,7 +16,7 @@ import {
   Box,
   InputAdornment,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+
 import { useState } from "react";
 
 const GroupSalaryForm = ({ value, onChange }) => {
@@ -29,6 +29,7 @@ const GroupSalaryForm = ({ value, onChange }) => {
     <Stack spacing={1}>
       {[1, 2, 3, 4, 5, 6].map((count, index) => (
         <TextField
+          key={count}
           fullWidth
           type="number"
           value={value[index]}
@@ -45,7 +46,6 @@ const GroupSalaryForm = ({ value, onChange }) => {
 
 const TeacherForm = ({
   onClose,
-  isLoading,
   onSubmit,
   subjects,
   defaultFirstName,
@@ -92,10 +92,10 @@ const TeacherForm = ({
     setGroupSalaryRate(copy);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (firstName && secondName && surname) {
       if (isValidationError) setIsValidationError(false);
-      onSubmit({
+      await onSubmit({
         firstName,
         secondName,
         surname,
@@ -105,6 +105,7 @@ const TeacherForm = ({
           ? { groupSalaryRate }
           : { individualSalaryRate }),
       });
+      onClose();
     } else setIsValidationError(true);
   };
 
@@ -196,14 +197,9 @@ const TeacherForm = ({
         <Button variant="outlined" onClick={onClose}>
           Відмінити
         </Button>
-        <LoadingButton
-          variant="contained"
-          loadingPosition="end"
-          loading={isLoading}
-          onClick={handleSubmit}
-        >
+        <Button variant="contained" onClick={handleSubmit}>
           Підтвердити
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );
@@ -213,7 +209,6 @@ export const TeacherDialogForm = ({
   isOpen,
   onSubmit,
   onClose,
-  isLoading,
   subjects,
   title,
   defaultFirstName = "",
@@ -239,7 +234,6 @@ export const TeacherDialogForm = ({
         title={title}
         onSubmit={onSubmit}
         onClose={onClose}
-        isLoading={isLoading}
         subjects={subjects}
       />
     </Dialog>

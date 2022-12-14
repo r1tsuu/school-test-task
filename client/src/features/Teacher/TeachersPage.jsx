@@ -1,12 +1,33 @@
 import { Box, Button, Grid, Stack, Typography, Alert } from "@mui/material";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { fetchTeachers, createTeacher, fetchSubjects } from "../../api";
-import { TeacherCardContainer } from "./TeacherCardContainer";
+import {
+  fetchTeachers,
+  createTeacher,
+  fetchSubjects,
+  updateTeacher,
+  deleteTeacher,
+} from "../../api";
+import { TeacherCard } from "./TeacherCard";
 import { TeacherCardSkeleton } from "./TeacherCardSkeleton";
 import { TeacherDialogForm } from "./TeacherDialogForm";
 
 const TeachersList = ({ subjectsQuery, teachersQuery }) => {
+  const queryClient = useQueryClient();
+  const updateTeacherMutation = useMutation({
+    mutationFn: updateTeacher,
+    onSuccess: () => {
+      queryClient.invalidateQueries("teachers");
+    },
+  });
+
+  const deleteTeacherMutation = useMutation({
+    mutationFn: deleteTeacher,
+    onSuccess: () => {
+      queryClient.invalidateQueries("teachers");
+    },
+  });
+
   if (teachersQuery.isLoading || subjectsQuery.isLoading)
     return (
       <Grid container spacing={2}>
@@ -20,8 +41,8 @@ const TeachersList = ({ subjectsQuery, teachersQuery }) => {
       </Grid>
     );
 
-  const { data: teachers } = teachersQuery.data;
-  const { data: subjects } = subjectsQuery.data;
+  const { data: teachers } = teachersQuery;
+  const { data: subjects } = subjectsQuery;
 
   if (!teachers.length) {
     return <Alert severity="info">Викладачів немає</Alert>;
@@ -29,11 +50,24 @@ const TeachersList = ({ subjectsQuery, teachersQuery }) => {
 
   return (
     <Grid container spacing={2}>
-      {teachers.map((teacher) => (
-        <Grid item xs={12} lg={4} key={teacher.id}>
-          <TeacherCardContainer subjects={subjects} {...teacher} />
-        </Grid>
-      ))}
+      {teachers.map((teacher) => {
+        const { id } = teacher;
+
+        const handleDelete = () => deleteTeacherMutation.mutate(id);
+        const handleUpdate = (teacher) =>
+          updateTeacherMutation.mutate({ id, teacher });
+
+        return (
+          <Grid item xs={12} lg={4} key={id}>
+            <TeacherCard
+              onDelete={handleDelete}
+              onUpdate={handleUpdate}
+              subjects={subjects}
+              {...teacher}
+            />
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };
@@ -53,10 +87,7 @@ export const TeachersPage = () => {
   const createTeacherMutation = useMutation({
     mutationFn: createTeacher,
     onSuccess: () => {
-      setIsCreateTeacherDialogOpened(false);
-      queryClient.invalidateQueries({
-        queryKey: ["teachers"],
-      });
+      queryClient.invalidateQueries("teachers");
     },
   });
 
@@ -74,7 +105,7 @@ export const TeachersPage = () => {
         <TeacherDialogForm
           title="Створити викладача"
           onSubmit={createTeacherMutation.mutate}
-          subjects={subjectsQuery.data.data}
+          subjects={subjectsQuery.data}
           onClose={handleCreateTeacherDialogClose}
           isOpen={isCreateTeacherDialogOpened}
           isLoading={createTeacherMutation.isLoading}
@@ -99,3 +130,5 @@ export const TeachersPage = () => {
     </>
   );
 };
+
+export default TeachersPage;
