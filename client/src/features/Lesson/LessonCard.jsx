@@ -6,6 +6,7 @@ export const LessonCard = ({
   type,
   teacherSalary,
   teacher,
+  subjectName,
   studentsCount,
   startDate,
 }) => {
@@ -14,11 +15,11 @@ export const LessonCard = ({
   const list = [
     {
       title: "Предмет",
-      value: teacher.subject.name,
+      value: subjectName,
     },
     {
       title: "Викладач",
-      value: `${teacher.firstName} ${teacher.secondName} ${teacher.surname}`,
+      value: `${teacher.name}`,
     },
     {
       title: "Дата уроку",

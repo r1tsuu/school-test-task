@@ -14,9 +14,7 @@ Get teacher by id
 
 ## POST /api/teacher
 
-Create teacher, example body: { "firstName": "Alex", "secondName": "Alexy",
-"surname": "Alexov", "lessonsType": "individual", "subjectId": 1,
-"individualSalaryRate": 200 }
+Create teacher
 
 ## PUT /api/teacher
 
@@ -32,5 +30,4 @@ Get all lessons
 
 # POST /api/lesson
 
-Create lesson, example body: { "startDate": "2022-12-13T19:17:20.671Z",
-"teacherId": 1 }
+Create lesson

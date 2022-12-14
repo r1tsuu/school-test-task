@@ -27,14 +27,11 @@ const TeacherDeleteDialog = ({ name, isOpen, onClose, onSubmit }) => {
 };
 
 export const TeacherCard = ({
-  firstName,
-  secondName,
-  surname,
+  name,
   lessonsType,
   individualSalaryRate,
   groupSalaryRate,
   subject,
-
   onDelete,
   onUpdate,
   subjects,
@@ -57,15 +54,7 @@ export const TeacherCard = ({
   const list = [
     {
       title: "Ім'я",
-      value: firstName,
-    },
-    {
-      title: "Прізвище",
-      value: secondName,
-    },
-    {
-      title: "По батькові",
-      value: surname,
+      value: name,
     },
     {
       title: "Предмет",
@@ -100,16 +89,14 @@ export const TeacherCard = ({
         onClose={handleUpdateTeacherDialogClose}
         onSubmit={onUpdate}
         subjects={subjects}
-        defaultFirstName={firstName}
-        defaultSecondName={secondName}
-        defaultSurname={surname}
+        defaultName={name}
         defaultGroupSalaryRate={groupSalaryRate}
         defaultLessonsType={lessonsType}
         defaultSubjectId={subject.id}
         defaultIndividualSalaryRate={individualSalaryRate}
       />
       <TeacherDeleteDialog
-        name={firstName}
+        name={name}
         isOpen={isDeleteTeacherDialogOpened}
         onClose={handleDeleteTeacherDialogClose}
         onSubmit={onDelete}

@@ -5,7 +5,9 @@ const Lesson = require("./Lesson");
 const Subject = require("./Subject");
 
 Teacher.belongsTo(Subject);
-Teacher.hasMany(Lesson);
+Teacher.hasMany(Lesson, {
+  onDelete: "cascade",
+});
 Lesson.belongsTo(Teacher);
 Lesson.belongsTo(Subject);
 

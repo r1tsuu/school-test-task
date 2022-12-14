@@ -11,8 +11,8 @@ import { LessonCreateDialogForm } from "./LessonCreateDialogForm";
 import { CardSkeleton } from "../../components/CardSkeleton";
 import { LessonCard } from "./LessonCard";
 
-const LessonsList = ({ lessonsQuery }) => {
-  if (lessonsQuery.isLoading)
+const LessonsList = ({ lessonsQuery, subjectsQuery }) => {
+  if (lessonsQuery.isLoading || subjectsQuery.isLoading)
     return (
       <Grid container spacing={2}>
         {Array(6)
@@ -26,16 +26,22 @@ const LessonsList = ({ lessonsQuery }) => {
     );
 
   const lessons = lessonsQuery.data;
+  const subjects = subjectsQuery.data;
 
-  if (!lessons.lessons) {
-    <Alert severity="info">Уроків немає</Alert>;
+  if (!lessons.length) {
+    return <Alert severity="info">Уроків немає</Alert>;
   }
 
   return (
     <Grid container spacing={2}>
       {lessons.map((lesson) => (
         <Grid item xs={12} lg={6} key={lesson.id}>
-          <LessonCard {...lesson} />
+          <LessonCard
+            subjectName={
+              subjects.find(({ id }) => id === lesson.subjectId).name
+            }
+            {...lesson}
+          />
         </Grid>
       ))}
     </Grid>
@@ -95,7 +101,10 @@ export const LessonsPage = () => {
             Створити урок
           </Button>
         </Box>
-        <LessonsList lessonsQuery={lessonsQuery} />
+        <LessonsList
+          lessonsQuery={lessonsQuery}
+          subjectsQuery={subjectsQuery}
+        />
       </Stack>
     </>
   );

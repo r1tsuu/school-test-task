@@ -45,18 +45,14 @@ const TeacherForm = ({
   onClose,
   onSubmit,
   subjects,
-  defaultFirstName,
-  defaultSecondName,
-  defaultSurname,
+  defaultName,
   defaultSubjectId,
   defaultIndividualSalaryRate,
   defaultGroupSalaryRate,
   defaultLessonsType,
   title,
 }) => {
-  const [firstName, setFirstName] = useState(defaultFirstName);
-  const [secondName, setSecondName] = useState(defaultSecondName);
-  const [surname, setSurname] = useState(defaultSurname);
+  const [name, setName] = useState(defaultName);
   const [subjectId, setSubjectId] = useState(
     defaultSubjectId ?? subjects[0].id
   );
@@ -70,11 +66,7 @@ const TeacherForm = ({
 
   const [isValidationError, setIsValidationError] = useState(false);
 
-  const handleFirstNameChange = (e) => setFirstName(e.target.value);
-
-  const handleSecondNameChange = (e) => setSecondName(e.target.value);
-
-  const handleSurnameChange = (e) => setSurname(e.target.value);
+  const handleNameChange = (e) => setName(e.target.value);
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
 
@@ -89,21 +81,16 @@ const TeacherForm = ({
     setGroupSalaryRate(copy);
   };
 
-  const handleSubmit = async () => {
-    if (firstName && secondName && surname) {
-      if (isValidationError) setIsValidationError(false);
-      await onSubmit({
-        firstName,
-        secondName,
-        surname,
-        subjectId,
-        lessonsType,
-        ...(lessonsType === "group"
-          ? { groupSalaryRate }
-          : { individualSalaryRate }),
-      });
-      onClose();
-    } else setIsValidationError(true);
+  const handleSubmit = () => {
+    onSubmit({
+      name,
+      subjectId,
+      lessonsType,
+      ...(lessonsType === "group"
+        ? { groupSalaryRate }
+        : { individualSalaryRate }),
+    });
+    onClose();
   };
 
   return (
@@ -118,28 +105,11 @@ const TeacherForm = ({
         }}
       >
         <TextField
-          error={isValidationError}
-          value={firstName}
-          onChange={handleFirstNameChange}
+          value={name}
+          onChange={handleNameChange}
           fullWidth
           variant="standard"
           label="Ім'я"
-        />
-        <TextField
-          error={isValidationError}
-          value={secondName}
-          onChange={handleSecondNameChange}
-          fullWidth
-          variant="standard"
-          label="Прізвище"
-        />
-        <TextField
-          error={isValidationError}
-          value={surname}
-          onChange={handleSurnameChange}
-          fullWidth
-          variant="standard"
-          label="По батькові"
         />
         <SubjectSelect
           subjects={subjects}
@@ -178,7 +148,11 @@ const TeacherForm = ({
         <Button variant="outlined" onClick={onClose}>
           Відмінити
         </Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          disabled={!Boolean(name)}
+          variant="contained"
+          onClick={handleSubmit}
+        >
           Підтвердити
         </Button>
       </DialogActions>
@@ -192,9 +166,7 @@ export const TeacherDialogForm = ({
   onClose,
   subjects,
   title,
-  defaultFirstName = "",
-  defaultSecondName = "",
-  defaultSurname = "",
+  defaultName = "",
   defaultSubjectId,
   defaultIndividualSalaryRate = 120,
   defaultGroupSalaryRate = [140, 160, 180, 200, 220, 250],
@@ -203,9 +175,7 @@ export const TeacherDialogForm = ({
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <TeacherForm
-        defaultFirstName={defaultFirstName}
-        defaultSecondName={defaultSecondName}
-        defaultSurname={defaultSurname}
+        defaultName={defaultName}
         defaultSubjectId={defaultSubjectId}
         defaultIndividualSalaryRate={defaultIndividualSalaryRate ?? 120}
         defaultGroupSalaryRate={

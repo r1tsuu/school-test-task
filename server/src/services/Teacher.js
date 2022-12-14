@@ -1,9 +1,7 @@
 const Joi = require("joi");
 
 const createSchema = Joi.object().keys({
-  firstName: Joi.string().required(),
-  secondName: Joi.string().required(),
-  surname: Joi.string().required(),
+  name: Joi.string().required(),
   lessonsType: Joi.string().valid("individual", "group").required(),
   subjectId: Joi.number().required(),
   individualSalaryRate: Joi.number().optional(),
@@ -11,9 +9,7 @@ const createSchema = Joi.object().keys({
 });
 
 const updateSchema = Joi.object({
-  firstName: Joi.string().optional(),
-  secondName: Joi.string().optional(),
-  surname: Joi.string().optional(),
+  name: Joi.string().optional(),
   lessonsType: Joi.string().valid("individual", "group").optional(),
   subjectId: Joi.number().optional(),
   individualSalaryRate: Joi.number().optional(),

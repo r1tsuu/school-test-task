@@ -2,15 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./database");
 
 const Teacher = sequelize.define("teacher", {
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  secondName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  surname: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },

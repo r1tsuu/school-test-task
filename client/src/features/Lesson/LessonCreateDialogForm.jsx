@@ -131,13 +131,11 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
               <FormLabel>Викладач</FormLabel>
               {filteredTeachers.length ? (
                 <Select onChange={handleTeacherIdChange} value={teacherId}>
-                  {filteredTeachers.map(
-                    ({ id, firstName, secondName, surname }) => (
-                      <MenuItem key={id} value={id}>
-                        {firstName} {secondName} {surname}
-                      </MenuItem>
-                    )
-                  )}
+                  {filteredTeachers.map(({ id, name }) => (
+                    <MenuItem key={id} value={id}>
+                      {name}
+                    </MenuItem>
+                  ))}
                 </Select>
               ) : (
                 <Alert severity="error">Викладачів не знайдено</Alert>
