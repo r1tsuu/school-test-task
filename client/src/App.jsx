@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { lazy, Suspense } from "react";
 
@@ -13,7 +12,11 @@ const queryClient = new QueryClient({
   },
 });
 
-const Dashboard = lazy(() => import("./components/Dashboard"));
+const Dashboard = lazy(() =>
+  import("./components/Dashboard").then((mod) => ({
+    default: mod.Dashboard,
+  }))
+);
 
 const TeachersPage = lazy(() =>
   import("./features/Teacher/TeachersPage").then((mod) => ({
