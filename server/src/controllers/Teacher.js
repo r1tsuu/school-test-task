@@ -5,20 +5,13 @@ const TeacherService = require("../services/Teacher");
 const TeacherController = require("express").Router();
 
 TeacherController.get("/", async (req, res) => {
+  console.log("TEACHER GET");
   try {
-    const { subjectId, lessonsType } = req.query;
-
     const teachers = await Teacher.findAll({
-      where: {
-        ...(lessonsType && {
-          lessonsType,
-        }),
-        ...(subjectId && {
-          subjectId,
-        }),
-      },
-      include: [Subject, Lesson],
+      include: Subject,
     });
+
+    console.log("Getted success, length: " + teachers.length);
     res.json(teachers);
   } catch (err) {
     console.log(err);
@@ -69,13 +62,7 @@ TeacherController.put("/:id", async (req, res) => {
           id: req.params.id,
         },
       });
-      const updatedTeacher = await Teacher.findOne({
-        where: {
-          id: req.params.id,
-        },
-      });
-
-      res.json(updatedTeacher);
+      res.json("success");
     } catch (err) {
       console.log(err);
       res.status(500).send();
@@ -84,12 +71,14 @@ TeacherController.put("/:id", async (req, res) => {
 });
 
 TeacherController.delete("/:id", async (req, res) => {
+  console.log("DESTROY TEACHER");
   try {
     await Teacher.destroy({
       where: {
         id: req.params.id,
       },
     });
+    console.log("DESTROY SUCCESS");
     res.json("success");
   } catch (error) {
     console.log(err);

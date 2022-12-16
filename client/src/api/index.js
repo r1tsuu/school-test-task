@@ -15,27 +15,34 @@ export const fetchTeachers = async () => {
 };
 
 export const createTeacher = async (teacher) => {
-  const { data } = await client.post("/teacher", teacher);
-  return data;
+  await client.post("/teacher", teacher);
 };
 
 export const updateTeacher = async ({ id, teacher }) => {
-  console.log(teacher);
-  const { data } = await client.put(`/teacher/${id}`, teacher);
-  return data;
+  await client.put(`/teacher/${id}`, teacher);
 };
 
 export const deleteTeacher = async (id) => {
-  const { data } = await client.delete(`/teacher/${id}`);
-  return data;
+  await client.delete(`/teacher/${id}`);
 };
 
-export const fetchLessons = async () => {
-  const { data } = await client.get("/lesson");
+export const fetchLessons = async (isConducted) => {
+  const { data } = await client.get(`/lesson`);
   return data;
 };
 
 export const createLesson = async (lesson) => {
-  const { data } = await client.post("/lesson", lesson);
-  return data;
+  await client.post("/lesson", lesson);
+};
+
+export const updateLesson = async ({ id, lesson }) => {
+  await client.put(`/lesson/${id}`, lesson);
+};
+
+export const conductLesson = async ({ id, isConducted }) => {
+  await client.put(`/lesson/conduct/${id}`, { isConducted });
+};
+
+export const deleteLesson = async (id) => {
+  await client.delete(`/lesson/${id}`);
 };

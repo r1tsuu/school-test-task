@@ -12,6 +12,9 @@ import {
   InputAdornment,
 } from "@mui/material";
 
+import CheckIcon from "@mui/icons-material/Check";
+import CancelIcon from "@mui/icons-material/Cancel";
+
 import { useState } from "react";
 import { LessonTypeSelect } from "../../components/LessonTypeSelect";
 import { SubjectSelect } from "../../components/SubjectSelect";
@@ -64,8 +67,6 @@ const TeacherForm = ({
   );
   const [lessonsType, setLessonsType] = useState(defaultLessonsType);
 
-  const [isValidationError, setIsValidationError] = useState(false);
-
   const handleNameChange = (e) => setName(e.target.value);
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
@@ -90,7 +91,6 @@ const TeacherForm = ({
         ? { groupSalaryRate }
         : { individualSalaryRate }),
     });
-    onClose();
   };
 
   return (
@@ -145,10 +145,11 @@ const TeacherForm = ({
         </FormControl>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", gap: 2, py: 3 }}>
-        <Button variant="outlined" onClick={onClose}>
+        <Button endIcon={<CancelIcon />} variant="outlined" onClick={onClose}>
           Відмінити
         </Button>
         <Button
+          endIcon={<CheckIcon />}
           disabled={!Boolean(name)}
           variant="contained"
           onClick={handleSubmit}
@@ -168,8 +169,8 @@ export const TeacherDialogForm = ({
   title,
   defaultName = "",
   defaultSubjectId,
-  defaultIndividualSalaryRate = 120,
-  defaultGroupSalaryRate = [140, 160, 180, 200, 220, 250],
+  defaultIndividualSalaryRate,
+  defaultGroupSalaryRate,
   defaultLessonsType = "individual",
 }) => {
   return (

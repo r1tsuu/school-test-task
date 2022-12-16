@@ -8,7 +8,12 @@ import {
 
 export const SubjectSelect = ({ subjects, value, onChange }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl
+      sx={{
+        gap: 0.5,
+      }}
+      fullWidth
+    >
       <FormLabel>Предмет</FormLabel>
       <Select onChange={onChange} value={value}>
         {subjects.map(({ id, name }) => (

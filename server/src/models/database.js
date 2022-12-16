@@ -6,6 +6,8 @@ const password = process.env.DB_PASSWORD;
 const db = process.env.DB_NAME;
 const url = process.env.DB_URL;
 
-const sequelize = new Sequelize(`${dbms}://${user}:${password}@${url}/${db}`);
+const sequelize = new Sequelize(`${dbms}://${user}:${password}@${url}/${db}`, {
+  logging: false,
+});
 
 module.exports = sequelize;

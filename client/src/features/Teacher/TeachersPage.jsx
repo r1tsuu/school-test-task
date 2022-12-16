@@ -1,6 +1,8 @@
 import { Box, Button, Grid, Stack, Typography, Alert } from "@mui/material";
 import { useState } from "react";
+import Add from "@mui/icons-material/Add";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import PeopleIcon from "@mui/icons-material/People";
 import {
   fetchTeachers,
   createTeacher,
@@ -14,6 +16,7 @@ import { TeacherDialogForm } from "./TeacherDialogForm";
 
 const TeachersList = ({ subjectsQuery, teachersQuery }) => {
   const queryClient = useQueryClient();
+
   const updateTeacherMutation = useMutation({
     mutationFn: updateTeacher,
     onSuccess: () => queryClient.invalidateQueries("teachers"),
@@ -80,13 +83,16 @@ export const TeachersPage = () => {
     queryFn: fetchSubjects,
   });
 
-  const createTeacherMutation = useMutation({
-    mutationFn: createTeacher,
-    onSuccess: () => queryClient.invalidateQueries("teachers"),
-  });
-
   const [isCreateTeacherDialogOpened, setIsCreateTeacherDialogOpened] =
     useState(false);
+
+  const createTeacherMutation = useMutation({
+    mutationFn: async (teacher) => {
+      await createTeacher(teacher);
+      setIsCreateTeacherDialogOpened(false);
+    },
+    onSuccess: () => queryClient.invalidateQueries("teachers"),
+  });
 
   const handleCreateTeacherDialogOpen = () =>
     setIsCreateTeacherDialogOpened(true);
@@ -107,11 +113,21 @@ export const TeachersPage = () => {
       )}
       <Stack spacing={3}>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h3">Викладачі</Typography>
+          <Box display="flex" alignItems={"center"} gap={2}>
+            <PeopleIcon
+              fontSize="inherit"
+              sx={{
+                fontSize: 50,
+              }}
+              color="primary"
+            />
+            <Typography variant="h3">Викладачі</Typography>
+          </Box>
           <Button
             onClick={handleCreateTeacherDialogOpen}
             variant="contained"
             disabled={isCreateTeacherDialogOpened || subjectsQuery.isLoading}
+            endIcon={<Add fontSize="large" />}
           >
             Створити викладача
           </Button>

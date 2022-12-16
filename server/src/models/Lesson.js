@@ -13,7 +13,16 @@ const Lesson = sequelize.define("lesson", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  isConducted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
   teacherSalary: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  time: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

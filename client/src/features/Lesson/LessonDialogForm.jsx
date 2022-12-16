@@ -1,8 +1,11 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+import CheckIcon from "@mui/icons-material/Check";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
   Stack,
   Box,
@@ -21,27 +24,38 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
+import "dayjs/locale/ru";
+
 import { LessonTypeSelect } from "../../components/LessonTypeSelect";
 import { SubjectSelect } from "../../components/SubjectSelect";
 import { useEffect, useRef, useMemo } from "react";
 
-const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
-  const [startDate, setStartDate] = useState(dayjs());
-  const [subjectId, setSubjectId] = useState(subjects[0].id);
-  const [type, setType] = useState("individual");
-  const [studentsCount, setStudentsCount] = useState(null);
+import { timeSelectOptions } from "./constants";
 
-  const filteredTeachers = useMemo(
-    () =>
-      teachers.filter(
-        (teacher) =>
-          teacher.subjectId === subjectId && teacher.lessonsType === type
-      ),
-    [subjectId, type]
+const LessonContentForm = ({
+  onClose,
+  onSubmit,
+  teachers,
+  subjects,
+  defaultStartDate,
+  defaultSubjectId,
+  defaultType,
+  defaultTime,
+  defaultStudentsCount,
+  defaultTeacherId,
+}) => {
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [subjectId, setSubjectId] = useState(defaultSubjectId);
+  const [type, setType] = useState(defaultType);
+  const [time, setTime] = useState(defaultTime);
+  const [studentsCount, setStudentsCount] = useState(defaultStudentsCount);
+
+  const filteredTeachers = teachers.filter(
+    (teacher) => teacher.subjectId === subjectId && teacher.lessonsType === type
   );
 
   const [teacherId, setTeacherId] = useState(
-    filteredTeachers.length ? filteredTeachers[0].id : null
+    defaultTeacherId ?? filteredTeachers.length ? filteredTeachers[0].id : null
   );
 
   const currentTeacher = useMemo(() => {
@@ -59,6 +73,7 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
   const handleTypeChange = (e) => setType(e.target.value);
+  const handleTimeChange = (e) => setTime(e.target.value);
   const handleTeacherIdChange = (e) => setTeacherId(e.target.value);
   const handleStudentsCountChange = (e) => setStudentsCount(e.target.value);
 
@@ -86,8 +101,8 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
       startDate,
       subjectId,
       teacherId,
-      teacherSalary,
       type,
+      time,
       ...(type === "group" && {
         studentsCount,
       }),
@@ -106,28 +121,49 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
           gap: 2,
         }}
       >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider adapterLocale={"ru"} dateAdapter={AdapterDayjs}>
           <Stack mt={2} spacing={3}>
             <DesktopDatePicker
               label="Дата початку"
-              inputFormat="MM/DD/YYYY"
+              inputFormat="MM.DD.YYYY"
               value={startDate}
               onChange={setStartDate}
               renderInput={(params) => <TextField {...params} />}
             />
             <TimePicker
+              ampm={false}
               label="Час початку"
               value={startDate}
               onChange={setStartDate}
               renderInput={(params) => <TextField {...params} />}
             />
+            <FormControl
+              sx={{
+                gap: 0.5,
+              }}
+              fullWidth
+            >
+              <FormLabel>Час проведення</FormLabel>
+              <Select onChange={handleTimeChange} value={time}>
+                {timeSelectOptions.map(({ value, label }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <LessonTypeSelect value={type} onChange={handleTypeChange} />
             <SubjectSelect
               subjects={subjects}
               value={subjectId}
               onChange={handleSubjectIdChange}
             />
-            <FormControl fullWidth>
+            <FormControl
+              sx={{
+                gap: 0.5,
+              }}
+              fullWidth
+            >
               <FormLabel>Викладач</FormLabel>
               {filteredTeachers.length ? (
                 <Select onChange={handleTeacherIdChange} value={teacherId}>
@@ -177,10 +213,15 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
               gap: 3,
             }}
           >
-            <Button variant="outlined" onClick={onClose}>
+            <Button
+              endIcon={<CancelIcon />}
+              variant="outlined"
+              onClick={onClose}
+            >
               Відмінити
             </Button>
             <Button
+              endIcon={<CheckIcon />}
               disabled={!currentTeacher}
               variant="contained"
               onClick={handleSubmit}
@@ -194,20 +235,32 @@ const LessonCreateContentForm = ({ onClose, onSubmit, teachers, subjects }) => {
   );
 };
 
-export const LessonCreateDialogForm = ({
+export const LessonDialogForm = ({
   isOpen,
   onClose,
   onSubmit,
   teachers,
   subjects,
+  defaultStartDate = dayjs(),
+  defaultSubjectId,
+  defaultType = "individual",
+  defaultTime = 60,
+  defaultStudentsCount = null,
+  defaultTeacherId,
 }) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <LessonCreateContentForm
+      <LessonContentForm
         onClose={onClose}
         onSubmit={onSubmit}
         teachers={teachers}
         subjects={subjects}
+        defaultStartDate={defaultStartDate}
+        defaultSubjectId={defaultSubjectId ?? subjects[0].id}
+        defaultType={defaultType}
+        defaultTime={defaultTime}
+        defaultStudentsCount={defaultStudentsCount}
+        defaultTeacherId={defaultTeacherId}
       />
     </Dialog>
   );

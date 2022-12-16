@@ -1,5 +1,10 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { CssBaseline } from "@mui/material";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { lazy, Suspense } from "react";
 
@@ -51,7 +56,31 @@ const router = createBrowserRouter([
         path: "/lessons",
         element: (
           <Suspense>
-            <LessonsPage />
+            <Navigate to={"/lessons/all"} />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/lessons/all",
+        element: (
+          <Suspense>
+            <LessonsPage lessonsDisplay="all" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/lessons/conducted",
+        element: (
+          <Suspense>
+            <LessonsPage lessonsDisplay="conducted" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/lessons/pending",
+        element: (
+          <Suspense>
+            <LessonsPage lessonsDisplay="pending" />
           </Suspense>
         ),
       },
