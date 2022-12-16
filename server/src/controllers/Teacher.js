@@ -5,13 +5,11 @@ const TeacherService = require("../services/Teacher");
 const TeacherController = require("express").Router();
 
 TeacherController.get("/", async (req, res) => {
-  console.log("TEACHER GET");
   try {
     const teachers = await Teacher.findAll({
       include: Subject,
     });
 
-    console.log("Getted success, length: " + teachers.length);
     res.json(teachers);
   } catch (err) {
     console.log(err);
@@ -71,14 +69,12 @@ TeacherController.put("/:id", async (req, res) => {
 });
 
 TeacherController.delete("/:id", async (req, res) => {
-  console.log("DESTROY TEACHER");
   try {
     await Teacher.destroy({
       where: {
         id: req.params.id,
       },
     });
-    console.log("DESTROY SUCCESS");
     res.json("success");
   } catch (error) {
     console.log(err);
