@@ -10,8 +10,17 @@ const Teacher = sequelize.define("teacher", {
     type: DataTypes.STRING, // enum individual | group
     allowNull: false,
   },
-  groupSalaryRate: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
+  groupSalaryRateOne: {
+    type: DataTypes.INTEGER,
+  },
+  groupSalaryRateTwo: {
+    type: DataTypes.INTEGER,
+  },
+  groupSalaryRateThree: {
+    type: DataTypes.INTEGER,
+  },
+  groupSalaryRateDifference: {
+    type: DataTypes.INTEGER,
   },
   individualSalaryRate: {
     type: DataTypes.INTEGER,

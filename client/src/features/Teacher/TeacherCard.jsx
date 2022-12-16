@@ -17,7 +17,10 @@ export const TeacherCard = ({
   id,
   lessonsType,
   individualSalaryRate,
-  groupSalaryRate,
+  groupSalaryRateOne,
+  groupSalaryRateTwo,
+  groupSalaryRateThree,
+  groupSalaryRateDifference,
   subject,
   onDelete,
   onUpdate,
@@ -70,13 +73,28 @@ export const TeacherCard = ({
       icon: lessonsType === "individual" ? <PersonIcon /> : <GroupsIcon />,
     },
     ...(lessonsType === "group"
-      ? ["1 учень", "2 учня", "3 учня", "4 учня", "5 учнів", "6 учнів"].map(
-          (countText, index) => ({
-            title: `Зарплатна ставка ${countText}`,
-            value: `${groupSalaryRate[index]} грн`,
+      ? [
+          {
+            title: "1 учень",
+            value: groupSalaryRateOne + " грн",
             icon: <MoneyIcon />,
-          })
-        )
+          },
+          {
+            title: "2 учня",
+            value: groupSalaryRateTwo + " грн",
+            icon: <MoneyIcon />,
+          },
+          {
+            title: "3 учня",
+            value: groupSalaryRateThree + " грн",
+            icon: <MoneyIcon />,
+          },
+          {
+            title: "Різниця прогресії учнів",
+            value: groupSalaryRateDifference + " грн",
+            icon: <MoneyIcon />,
+          },
+        ]
       : [
           {
             title: "Зарплатна ставка",
@@ -95,7 +113,10 @@ export const TeacherCard = ({
         onSubmit={handleUpdate}
         subjects={subjects}
         defaultName={name}
-        defaultGroupSalaryRate={groupSalaryRate}
+        defaultGroupSalaryRateOne={groupSalaryRateOne}
+        defaultGroupSalaryRateTwo={groupSalaryRateOne}
+        defaultGroupSalaryRateThree={groupSalaryRateThree}
+        defaultGroupSalaryRateDifference={groupSalaryRateDifference}
         defaultLessonsType={lessonsType}
         defaultSubjectId={subject.id}
         defaultIndividualSalaryRate={individualSalaryRate}

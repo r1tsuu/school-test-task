@@ -19,31 +19,6 @@ import { useState } from "react";
 import { LessonTypeSelect } from "../../components/LessonTypeSelect";
 import { SubjectSelect } from "../../components/SubjectSelect";
 
-const GroupSalaryForm = ({ value, onChange }) => {
-  const handleChange = (index) => {
-    return (e) => {
-      onChange(index, e);
-    };
-  };
-  return (
-    <Stack spacing={1}>
-      {[1, 2, 3, 4, 5, 6].map((count, index) => (
-        <TextField
-          key={count}
-          fullWidth
-          type="number"
-          value={value[index]}
-          onChange={handleChange(index)}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">₴</InputAdornment>,
-          }}
-          label={`Кількість учнів: ${count}`}
-        />
-      ))}
-    </Stack>
-  );
-};
-
 const TeacherForm = ({
   onClose,
   onSubmit,
@@ -51,7 +26,10 @@ const TeacherForm = ({
   defaultName,
   defaultSubjectId,
   defaultIndividualSalaryRate,
-  defaultGroupSalaryRate,
+  defaultGroupSalaryRateOne,
+  defaultGroupSalaryRateTwo,
+  defaultGroupSalaryRateThree,
+  defaultGroupSalaryRateDifference,
   defaultLessonsType,
   title,
 }) => {
@@ -62,10 +40,21 @@ const TeacherForm = ({
   const [individualSalaryRate, setIndividualSalaryRate] = useState(
     defaultIndividualSalaryRate
   );
-  const [groupSalaryRate, setGroupSalaryRate] = useState(
-    defaultGroupSalaryRate
-  );
+
   const [lessonsType, setLessonsType] = useState(defaultLessonsType);
+
+  const [groupSalaryRateOne, setGroupSalaryRateOne] = useState(
+    defaultGroupSalaryRateOne
+  );
+  const [groupSalaryRateTwo, setGroupSalaryRateTwo] = useState(
+    defaultGroupSalaryRateTwo
+  );
+  const [groupSalaryRateThree, setGroupSalaryRateThree] = useState(
+    defaultGroupSalaryRateThree
+  );
+  const [groupSalaryRateDifference, setGroupSalaryRateDifference] = useState(
+    defaultGroupSalaryRateDifference
+  );
 
   const handleNameChange = (e) => setName(e.target.value);
 
@@ -76,11 +65,17 @@ const TeacherForm = ({
   const handleIndividualSalaryRateChange = (e) =>
     setIndividualSalaryRate(e.target.value);
 
-  const handleGroupSalaryRateChange = (index, e) => {
-    const copy = [...groupSalaryRate];
-    copy[index] = Number(e.target.value);
-    setGroupSalaryRate(copy);
-  };
+  const handleGroupSalaryRateOneChange = (e) =>
+    setGroupSalaryRateOne(e.target.value);
+
+  const handleGroupSalaryRateTwoChange = (e) =>
+    setGroupSalaryRateTwo(e.target.value);
+
+  const handleGroupSalaryRateThreeChange = (e) =>
+    setGroupSalaryRateThree(e.target.value);
+
+  const handleGroupSalaryRateDifferenceChange = (e) =>
+    setGroupSalaryRateDifference(e.target.value);
 
   const handleSubmit = () => {
     onSubmit({
@@ -88,7 +83,12 @@ const TeacherForm = ({
       subjectId,
       lessonsType,
       ...(lessonsType === "group"
-        ? { groupSalaryRate }
+        ? {
+            groupSalaryRateOne,
+            groupSalaryRateTwo,
+            groupSalaryRateThree,
+            groupSalaryRateDifference,
+          }
         : { individualSalaryRate }),
     });
   };
@@ -124,10 +124,56 @@ const TeacherForm = ({
           <FormLabel>Зарплатна ставка</FormLabel>
           <Box mt={2}>
             {lessonsType === "group" ? (
-              <GroupSalaryForm
-                value={groupSalaryRate}
-                onChange={handleGroupSalaryRateChange}
-              />
+              <Stack spacing={1}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={groupSalaryRateOne}
+                  onChange={handleGroupSalaryRateOneChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₴</InputAdornment>
+                    ),
+                  }}
+                  label={`Кількість учнів: 1`}
+                />
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={groupSalaryRateTwo}
+                  onChange={handleGroupSalaryRateTwoChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₴</InputAdornment>
+                    ),
+                  }}
+                  label={`Кількість учнів: 2`}
+                />
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={groupSalaryRateThree}
+                  onChange={handleGroupSalaryRateThreeChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₴</InputAdornment>
+                    ),
+                  }}
+                  label={`Кількість учнів: 3`}
+                />
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={groupSalaryRateDifference}
+                  onChange={handleGroupSalaryRateDifferenceChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₴</InputAdornment>
+                    ),
+                  }}
+                  label={`Різниця прогресії учнів > 3`}
+                />
+              </Stack>
             ) : (
               <TextField
                 fullWidth
@@ -170,7 +216,10 @@ export const TeacherDialogForm = ({
   defaultName = "",
   defaultSubjectId,
   defaultIndividualSalaryRate,
-  defaultGroupSalaryRate,
+  defaultGroupSalaryRateOne,
+  defaultGroupSalaryRateTwo,
+  defaultGroupSalaryRateThree,
+  defaultGroupSalaryRateDifference,
   defaultLessonsType = "individual",
 }) => {
   return (
@@ -179,8 +228,11 @@ export const TeacherDialogForm = ({
         defaultName={defaultName}
         defaultSubjectId={defaultSubjectId}
         defaultIndividualSalaryRate={defaultIndividualSalaryRate ?? 120}
-        defaultGroupSalaryRate={
-          defaultGroupSalaryRate ?? [140, 160, 180, 200, 220, 250]
+        defaultGroupSalaryRateOne={defaultGroupSalaryRateOne ?? 120}
+        defaultGroupSalaryRateTwo={defaultGroupSalaryRateTwo ?? 150}
+        defaultGroupSalaryRateThree={defaultGroupSalaryRateThree ?? 200}
+        defaultGroupSalaryRateDifference={
+          defaultGroupSalaryRateDifference ?? 60
         }
         defaultLessonsType={defaultLessonsType}
         title={title}

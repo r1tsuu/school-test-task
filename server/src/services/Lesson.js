@@ -24,7 +24,21 @@ const conductSchema = Joi.object({
 
 const resolveSalary = (teacher, lesson) => {
   if (lesson.type === "individual") return teacher.individualSalaryRate;
-  return teacher.groupSalaryRate?.[lesson.studentsCount - 1];
+  const { studentsCount } = lesson;
+
+  switch (studentsCount) {
+    case 1:
+      return teacher.groupSalaryRateOne;
+    case 2:
+      return teacher.groupSalaryRateTwo;
+    case 3:
+      return teacher.groupSalaryRateThree;
+    default:
+      return (
+        teacher.groupSalaryRateThree +
+        (studentsCount - 3) * teacher.groupSalaryRateDifference
+      );
+  }
 };
 
 const LessonService = {

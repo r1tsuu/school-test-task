@@ -5,7 +5,6 @@ const LessonService = require("../services/Lesson");
 const LessonController = require("express").Router();
 
 LessonController.get("/", async (req, res) => {
-  const isConducted = req.query;
   try {
     const lessons = await Lesson.findAll({
       include: {

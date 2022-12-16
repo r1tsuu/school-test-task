@@ -21,6 +21,7 @@ import {
   MenuItem,
   Alert,
   Typography,
+  InputAdornment,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -65,17 +66,35 @@ const LessonContentForm = ({
 
   const mounted = useRef(false);
 
+  const isValidStudentsCount = useMemo(
+    () => studentsCount > 0,
+    [studentsCount]
+  );
+
   const teacherSalary = useMemo(() => {
     if (!currentTeacher) return null;
     if (type === "individual") return currentTeacher.individualSalaryRate;
-    return currentTeacher.groupSalaryRate?.[studentsCount - 1];
+    switch (studentsCount) {
+      case 1:
+        return currentTeacher.groupSalaryRateOne;
+      case 2:
+        return currentTeacher.groupSalaryRateTwo;
+      case 3:
+        return currentTeacher.groupSalaryRateThree;
+      default:
+        return (
+          currentTeacher.groupSalaryRateThree +
+          (studentsCount - 3) * currentTeacher.groupSalaryRateDifference
+        );
+    }
   }, [studentsCount, currentTeacher]);
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
   const handleTypeChange = (e) => setType(e.target.value);
   const handleTimeChange = (e) => setTime(e.target.value);
   const handleTeacherIdChange = (e) => setTeacherId(e.target.value);
-  const handleStudentsCountChange = (e) => setStudentsCount(e.target.value);
+  const handleStudentsCountChange = (e) =>
+    setStudentsCount(Number(e.target.value));
 
   useEffect(() => {
     if (type === "group" && studentsCount === null) setStudentsCount(1);
@@ -178,22 +197,22 @@ const LessonContentForm = ({
               )}
             </FormControl>
             {type === "group" && (
-              <FormControl fullWidth>
-                <FormLabel>Кількість Студентів</FormLabel>
-                <Select
-                  disabled={!currentTeacher}
-                  onChange={handleStudentsCountChange}
-                  value={studentsCount}
-                >
-                  {Array(6)
-                    .fill("_")
-                    .map((_, index) => (
-                      <MenuItem key={index} value={index + 1}>
-                        {index + 1}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
+              <TextField
+                error={!isValidStudentsCount}
+                fullWidth
+                type="number"
+                inputProps={{
+                  min: 1,
+                }}
+                value={studentsCount}
+                onChange={handleStudentsCountChange}
+                label="Кількість студентів"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">₴</InputAdornment>
+                  ),
+                }}
+              />
             )}
           </Stack>
         </LocalizationProvider>
@@ -202,10 +221,12 @@ const LessonContentForm = ({
         <Stack width={"100%"} spacing={1.5}>
           {currentTeacher && (
             <Typography textAlign="center" variant="subtitle1">
-              Зарплата вчителя за урок: {teacherSalary}
-              грн
+              {isValidStudentsCount
+                ? `Зарплата вчителя за урок: ${teacherSalary} грн`
+                : "Невірно набрана кількість студентів"}
             </Typography>
           )}
+
           <Box
             sx={{
               display: "flex",
@@ -222,7 +243,7 @@ const LessonContentForm = ({
             </Button>
             <Button
               endIcon={<CheckIcon />}
-              disabled={!currentTeacher}
+              disabled={!currentTeacher || !isValidStudentsCount}
               variant="contained"
               onClick={handleSubmit}
             >

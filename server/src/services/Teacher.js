@@ -5,7 +5,10 @@ const createSchema = Joi.object().keys({
   lessonsType: Joi.string().valid("individual", "group").required(),
   subjectId: Joi.number().required(),
   individualSalaryRate: Joi.number().optional(),
-  groupSalaryRate: Joi.array().items(Joi.number()).optional(),
+  groupSalaryRateOne: Joi.number().optional(),
+  groupSalaryRateTwo: Joi.number().optional(),
+  groupSalaryRateThree: Joi.number().optional(),
+  groupSalaryRateDifference: Joi.number().optional(),
 });
 
 const updateSchema = Joi.object({
@@ -13,7 +16,10 @@ const updateSchema = Joi.object({
   lessonsType: Joi.string().valid("individual", "group").optional(),
   subjectId: Joi.number().optional(),
   individualSalaryRate: Joi.number().optional(),
-  groupSalaryRate: Joi.array().items(Joi.number()).optional(),
+  groupSalaryRateOne: Joi.number().optional(),
+  groupSalaryRateTwo: Joi.number().optional(),
+  groupSalaryRateThree: Joi.number().optional(),
+  groupSalaryRateDifference: Joi.number().optional(),
 });
 
 const TeacherService = {
