@@ -126,6 +126,7 @@ const TeacherForm = ({
             {lessonsType === "group" ? (
               <Stack spacing={1}>
                 <TextField
+                  autoComplete="off"
                   fullWidth
                   type="number"
                   value={groupSalaryRateOne}
@@ -138,6 +139,7 @@ const TeacherForm = ({
                   label={`Кількість учнів: 1`}
                 />
                 <TextField
+                  autoComplete="off"
                   fullWidth
                   type="number"
                   value={groupSalaryRateTwo}
@@ -150,6 +152,7 @@ const TeacherForm = ({
                   label={`Кількість учнів: 2`}
                 />
                 <TextField
+                  autoComplete="off"
                   fullWidth
                   type="number"
                   value={groupSalaryRateThree}
@@ -162,6 +165,7 @@ const TeacherForm = ({
                   label={`Кількість учнів: 3`}
                 />
                 <TextField
+                  autoComplete="off"
                   fullWidth
                   type="number"
                   value={groupSalaryRateDifference}

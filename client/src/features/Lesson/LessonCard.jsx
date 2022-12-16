@@ -21,9 +21,9 @@ import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CardList } from "../../components/CardList";
-import { timeSelectOptions } from "./constants";
 import { useState } from "react";
 import { LessonDialogForm } from "./LessonDialogForm";
+import { timeSelectOptions } from "../../utils/constants";
 
 export const LessonCard = ({
   type,

@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
@@ -23,15 +23,14 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-import { useState } from "react";
 
 import "dayjs/locale/ru";
 
 import { LessonTypeSelect } from "../../components/LessonTypeSelect";
 import { SubjectSelect } from "../../components/SubjectSelect";
-import { useEffect, useRef, useMemo } from "react";
 
-import { timeSelectOptions } from "./constants";
+import { resolveSalary } from "../../utils/resolveSalary";
+import { LessonTimeSelect } from "../../components/LessonTimeSelect";
 
 const LessonContentForm = ({
   onClose,
@@ -72,21 +71,7 @@ const LessonContentForm = ({
   );
 
   const teacherSalary = useMemo(() => {
-    if (!currentTeacher) return null;
-    if (type === "individual") return currentTeacher.individualSalaryRate;
-    switch (studentsCount) {
-      case 1:
-        return currentTeacher.groupSalaryRateOne;
-      case 2:
-        return currentTeacher.groupSalaryRateTwo;
-      case 3:
-        return currentTeacher.groupSalaryRateThree;
-      default:
-        return (
-          currentTeacher.groupSalaryRateThree +
-          (studentsCount - 3) * currentTeacher.groupSalaryRateDifference
-        );
-    }
+    resolveSalary(type, currentTeacher, studentsCount);
   }, [studentsCount, currentTeacher]);
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
@@ -156,21 +141,7 @@ const LessonContentForm = ({
               onChange={setStartDate}
               renderInput={(params) => <TextField {...params} />}
             />
-            <FormControl
-              sx={{
-                gap: 0.5,
-              }}
-              fullWidth
-            >
-              <FormLabel>Час проведення</FormLabel>
-              <Select onChange={handleTimeChange} value={time}>
-                {timeSelectOptions.map(({ value, label }) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <LessonTimeSelect onChange={handleTimeChange} value={time} />
             <LessonTypeSelect value={type} onChange={handleTypeChange} />
             <SubjectSelect
               subjects={subjects}
@@ -198,6 +169,7 @@ const LessonContentForm = ({
             </FormControl>
             {type === "group" && (
               <TextField
+                autoComplete="off"
                 error={!isValidStudentsCount}
                 fullWidth
                 type="number"
@@ -207,11 +179,6 @@ const LessonContentForm = ({
                 value={studentsCount}
                 onChange={handleStudentsCountChange}
                 label="Кількість студентів"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">₴</InputAdornment>
-                  ),
-                }}
               />
             )}
           </Stack>

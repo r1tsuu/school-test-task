@@ -1,5 +1,19 @@
 import { useState } from "react";
-import { Card, CardActions, Button, CardContent, Stack } from "@mui/material";
+import {
+  Card,
+  CardActions,
+  Button,
+  CardContent,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  InputAdornment,
+  DialogActions,
+  Typography,
+  Box,
+  Dialog,
+  Stack,
+} from "@mui/material";
 import { TeacherDialogForm } from "./TeacherDialogForm";
 import { CardList } from "../../components/CardList";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
@@ -11,6 +25,94 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import MoneyIcon from "@mui/icons-material/Money";
 import NumbersIcon from "@mui/icons-material/Numbers";
 import PersonIcon from "@mui/icons-material/Person";
+import { resolveSalary } from "../../utils/resolveSalary";
+import { LessonTimeSelect } from "../../components/LessonTimeSelect";
+
+const CalculateGroupSalary = ({
+  name,
+  groupSalaryRateOne,
+  groupSalaryRateTwo,
+  groupSalaryRateThree,
+  groupSalaryRateDifference,
+}) => {
+  const [studentsCount, setStudentsCount] = useState(1);
+  const [time, setTime] = useState(60);
+
+  const isValidStudentsCount = studentsCount > 0;
+
+  const handleStudentsCountChange = (e) =>
+    setStudentsCount(Number(e.target.value));
+
+  const handleTimeChange = (e) => setTime(e.target.value);
+
+  const teacherSalary = resolveSalary(
+    "group",
+    {
+      groupSalaryRateOne,
+      groupSalaryRateTwo,
+      groupSalaryRateThree,
+      groupSalaryRateDifference,
+    },
+    studentsCount,
+    time
+  );
+
+  return (
+    <>
+      <DialogTitle>
+        Розрахунок зарплати групового уроку викладача {name}
+      </DialogTitle>
+      <DialogContent
+        sx={{
+          width: "100%",
+        }}
+      >
+        <Stack spacing={2}>
+          <TextField
+            autoComplete="off"
+            sx={{
+              mt: 2,
+            }}
+            error={!isValidStudentsCount}
+            fullWidth
+            type="number"
+            inputProps={{
+              min: 1,
+            }}
+            value={studentsCount}
+            onChange={handleStudentsCountChange}
+            label="Кількість студентів"
+          />
+          <LessonTimeSelect value={time} onChange={handleTimeChange} />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Typography
+          sx={{
+            width: "100%",
+          }}
+          textAlign="center"
+          variant="h5"
+        >
+          {isValidStudentsCount ? (
+            <span>
+              Зарплата вчителя за урок{" "}
+              <Box
+                component="span"
+                sx={{ color: "primary.main", fontSize: 40 }}
+              >
+                {teacherSalary}
+              </Box>{" "}
+              грн
+            </span>
+          ) : (
+            "Невірно набрана кількість студентів"
+          )}
+        </Typography>
+      </DialogActions>
+    </>
+  );
+};
 
 export const TeacherCard = ({
   name,
@@ -31,10 +133,20 @@ export const TeacherCard = ({
   const [isUpdateTeacherDialogOpened, setIsUpdateTeacherDialogOpened] =
     useState(false);
 
+  const [
+    isCalculateGroupSalaryDialogOpened,
+    setIsCalculateGroupSalaryDialogOpened,
+  ] = useState(false);
+
   const handleDeleteTeacherDialogOpen = () =>
     setIsDeleteTeacherDialogOpened(true);
   const handleDeleteTeacherDialogClose = () =>
     setIsDeleteTeacherDialogOpened(false);
+
+  const handleCalculateGroupSalaryDialogOpen = () =>
+    setIsCalculateGroupSalaryDialogOpened(true);
+  const handleCalculateGroupSalaryDialogClose = () =>
+    setIsCalculateGroupSalaryDialogOpened(false);
 
   const handleConfirmDelete = async () => {
     await onDelete();
@@ -91,7 +203,14 @@ export const TeacherCard = ({
           },
           {
             title: "Різниця прогресії учнів",
-            value: groupSalaryRateDifference + " грн",
+            value: (
+              <Box display="flex" gap={2}>
+                <span> {groupSalaryRateDifference} грн</span>
+                <Button onClick={handleCalculateGroupSalaryDialogOpen}>
+                  Розрахувати
+                </Button>
+              </Box>
+            ),
             icon: <MoneyIcon />,
           },
         ]
@@ -114,7 +233,7 @@ export const TeacherCard = ({
         subjects={subjects}
         defaultName={name}
         defaultGroupSalaryRateOne={groupSalaryRateOne}
-        defaultGroupSalaryRateTwo={groupSalaryRateOne}
+        defaultGroupSalaryRateTwo={groupSalaryRateTwo}
         defaultGroupSalaryRateThree={groupSalaryRateThree}
         defaultGroupSalaryRateDifference={groupSalaryRateDifference}
         defaultLessonsType={lessonsType}
@@ -127,6 +246,18 @@ export const TeacherCard = ({
         onClose={handleDeleteTeacherDialogClose}
         onConfirm={handleConfirmDelete}
       />
+      <Dialog
+        open={isCalculateGroupSalaryDialogOpened}
+        onClose={handleCalculateGroupSalaryDialogClose}
+      >
+        <CalculateGroupSalary
+          name={name}
+          groupSalaryRateOne={groupSalaryRateOne}
+          groupSalaryRateTwo={groupSalaryRateTwo}
+          groupSalaryRateThree={groupSalaryRateThree}
+          groupSalaryRateDifference={groupSalaryRateDifference}
+        />
+      </Dialog>
       <Card
         sx={{
           overflow: "auto",
