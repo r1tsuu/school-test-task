@@ -44,7 +44,7 @@ const LessonsList = ({
   });
 
   const deleteLessonMutation = useMutation({
-    mutation: deleteLesson,
+    mutationFn: deleteLesson,
     onSuccess: () => queryClient.invalidateQueries("lessons"),
   });
 

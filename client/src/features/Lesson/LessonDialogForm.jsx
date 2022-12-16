@@ -50,8 +50,13 @@ const LessonContentForm = ({
   const [time, setTime] = useState(defaultTime);
   const [studentsCount, setStudentsCount] = useState(defaultStudentsCount);
 
-  const filteredTeachers = teachers.filter(
-    (teacher) => teacher.subjectId === subjectId && teacher.lessonsType === type
+  const filteredTeachers = useMemo(
+    () =>
+      teachers.filter(
+        (teacher) =>
+          teacher.subjectId === subjectId && teacher.lessonsType === type
+      ),
+    [subjectId, type]
   );
 
   const [teacherId, setTeacherId] = useState(
@@ -65,14 +70,12 @@ const LessonContentForm = ({
 
   const mounted = useRef(false);
 
-  const isValidStudentsCount = useMemo(
-    () => studentsCount > 0,
-    [studentsCount]
-  );
+  const isValidStudentsCount = type === "individual" || studentsCount > 0;
 
-  const teacherSalary = useMemo(() => {
-    resolveSalary(type, currentTeacher, studentsCount);
-  }, [studentsCount, currentTeacher]);
+  const teacherSalary = useMemo(
+    () => resolveSalary(type, currentTeacher, studentsCount, time),
+    [currentTeacher, studentsCount, time]
+  );
 
   const handleSubjectIdChange = (e) => setSubjectId(e.target.value);
   const handleTypeChange = (e) => setType(e.target.value);
@@ -233,7 +236,7 @@ export const LessonDialogForm = ({
   defaultSubjectId,
   defaultType = "individual",
   defaultTime = 60,
-  defaultStudentsCount = null,
+  defaultStudentsCount = 1,
   defaultTeacherId,
 }) => {
   return (

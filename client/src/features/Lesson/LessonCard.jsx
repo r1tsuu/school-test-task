@@ -24,6 +24,7 @@ import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LessonDialogForm } from "./LessonDialogForm";
 import { timeSelectOptions } from "../../utils/constants";
+import { ConfirmDialog } from "../../components/ConfirmDialog";
 
 export const LessonCard = ({
   type,
@@ -47,6 +48,7 @@ export const LessonCard = ({
   const [isSuccessedConductAlertOpened, setIsSuccessedConductAlertOpened] =
     useState(false);
   const [isUpdateDialogOpened, setIsUpdateDialogOpened] = useState(false);
+  const [isDeleteDialogOpened, setIsDeleteDialogOpened] = useState(false);
 
   const handleConduct = async () => {
     await onConduct();
@@ -55,6 +57,9 @@ export const LessonCard = ({
 
   const handleUpdateDialogOpen = () => setIsUpdateDialogOpened(true);
   const handleUpdateDialogClose = () => setIsUpdateDialogOpened(false);
+
+  const handleDeleteDialogOpen = () => setIsDeleteDialogOpened(true);
+  const handleDeleteDialogClose = () => setIsDeleteDialogOpened(false);
 
   const handleSuccessedConductAlertClose = () =>
     setIsSuccessedConductAlertOpened(false);
@@ -128,6 +133,12 @@ export const LessonCard = ({
         defaultStudentsCount={studentsCount}
         defaultTeacherId={teacher.id}
       />
+      <ConfirmDialog
+        title={`Ви дійсно хочете видалити урок №${id}`}
+        onClose={handleDeleteDialogClose}
+        onConfirm={onDelete}
+        isOpen={isDeleteDialogOpened}
+      />
       <CardContent>
         <CardList list={list} />
       </CardContent>
@@ -153,7 +164,7 @@ export const LessonCard = ({
             Редагувати
           </Button>
           <Button
-            onClick={onDelete}
+            onClick={handleDeleteDialogOpen}
             endIcon={<DeleteIcon />}
             variant="outlined"
           >
