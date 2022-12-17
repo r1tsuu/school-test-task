@@ -66,7 +66,7 @@ LessonController.put("/:id", async (req, res) => {
     await Lesson.update(
       {
         ...lesson,
-        teacherSalary: LessonService.resolveSalary(lesson, teacher),
+        teacherSalary: LessonService.resolveSalary(teacher, lesson),
       },
       {
         where: {
